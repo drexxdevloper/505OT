@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>UNDEAD ARMY</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <h1 class="title-anim">UNDEAD ARMY</h1>
+
+  <!-- LOADING BAR -->
+  <div class="loading-bar">
+    <div class="loading-fill" id="loadingFill"></div>
+  </div>
+
+  <p class="tap hidden" id="tapText">Tap untuk melanjutkan</p>
+</div>
+
+<!-- MAIN -->
+<div class="wrapper hidden" id="main">
+
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+  <div class="menu hidden" id="menu">
+    <div onclick="openPanel('memberPanel')">📋 List Member</div>
+    <div onclick="openPanel('adminPanel')">🛡️ List Admin</div>
+    <div onclick="openDev()">💻 Dev</div>
+  </div>
+
+  <img src="logo.png" class="gang-logo">
+  <h1 class="title-anim small">UNDEAD ARMY</h1>
+
+</div>
+
+<!-- MEMBER PANEL -->
+<div class="panel hidden" id="memberPanel">
+  <div class="panel-header">
+    <h2>LIST MEMBER</h2>
+    <span onclick="closePanel()">✕</span>
+  </div>
+  <ul class="panel-list" id="memberList"></ul>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="panel hidden" id="adminPanel">
+  <div class="panel-header">
+    <h2>LIST ADMIN</h2>
+    <span onclick="closePanel()">✕</span>
+  </div>
+  <ul class="panel-list" id="adminList"></ul>
+</div>
+
+<!-- DEV PANEL -->
+<div class="panel hidden" id="devPanel">
+  <div class="panel-header">
+    <h2>DEV PANEL</h2>
+    <span onclick="closePanel()">✕</span>
+  </div>
+
+  <div class="dev-box">
+    <input id="devName" placeholder="Nama">
+    <select id="devType">
+      <option value="member">Member</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="addName()">Tambah</button>
+  </div>
+</div>
+
+<script>
+/* ===== LOADING ===== */
+let progress = 0;
+const fill = document.getElementById("loadingFill");
+const tapText = document.getElementById("tapText");
+
+const loadInt = setInterval(() => {
+  progress += 2;
+  fill.style.width = progress + "%";
+  if (progress >= 100) {
+    clearInterval(loadInt);
+    tapText.classList.remove("hidden");
+  }
+}, 40);
+
+document.getElementById("splash").onclick = () => {
+  if (progress >= 100) {
+    splash.classList.add("fade-out");
+    main.classList.remove("hidden");
+  }
+};
+
+/* ===== MENU ===== */
+function toggleMenu(){
+  menu.classList.toggle("hidden");
+}
+
+function openPanel(id){
+  menu.classList.add("hidden");
+  const p = document.getElementById(id);
+  p.classList.remove("hidden");
+  setTimeout(()=>p.classList.add("show"),10);
+}
+
+function closePanel(){
+  document.querySelectorAll(".panel").forEach(p=>{
+    p.classList.remove("show");
+    setTimeout(()=>p.classList.add("hidden"),300);
+  });
+}
+
+/* ===== DATA ===== */
+let members = JSON.parse(localStorage.getItem("members")) || ["DREXX"];
+let admins  = JSON.parse(localStorage.getItem("admins"))  || ["RUZZ"];
+
+function render(){
+  memberList.innerHTML = members.map(n=>`<li>${n}</li>`).join("");
+  adminList.innerHTML  = admins.map(n=>`<li>${n}</li>`).join("");
+}
+render();
+
+/* ===== DEV ===== */
+function openDev(){
+  const pin = prompt("Masukkan PIN DEV");
+  if(pin === "drex123"){
+    openPanel("devPanel");
+  } else {
+    alert("PIN SALAH");
+  }
+}
+
+function addName(){
+  const name = devName.value.trim();
+  if(!name) return;
+
+  if(devType.value === "member"){
+    members.push(name);
+    localStorage.setItem("members", JSON.stringify(members));
+  } else {
+    admins.push(name);
+    localStorage.setItem("admins", JSON.stringify(admins));
+  }
+  render();
+  devName.value = "";
+}
+</script>
+
+</body>
+</html>
