@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>UDA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+ <h1 class="glitch loading-text">UNDEAD ARMY</h1>
+ <div class="loading-bar"><div class="loading-progress" id="loadingProgress"></div></div>
+ <p class="tap hidden" id="tapText">Tap untuk masuk</p>
+</div>
+
+<!-- MAIN -->
+<div class="wrapper hidden" id="main">
+ <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+ <div class="menu hidden" id="menu">
+  <div onclick="openPanel('memberPanel')">📋 List Member</div>
+  <div onclick="openPanel('adminPanel')">🛡️ List Admin</div>
+  <div onclick="openPanel('galleryPanel')">🖼️ Galeri</div>
+  <div onclick="openPanel('kodamPanel')">🧿 Cek Kodam</div>
+  <div onclick="openPanel('ddsPanel')">🏍️ DDS</div>
+  <div onclick="openFish()">🐟 Fish It</div>
+ </div>
+
+ <img src="logo.png" class="gang-logo">
+ <h1 class="glitch">UNDEAD ARMY</h1>
+ <div class="subtitle">KLIK DIBAWAH UNTUK MENDAFTAR GANG UDA</div>
+ <a href="https://wa.me/6281973529184" class="register-btn">DAFTAR SEKARANG</a>
+</div>
+
+<!-- MEMBER -->
+<div class="panel hidden" id="memberPanel">
+ <div class="panel-header"><h2>LIST MEMBER</h2><span onclick="closePanel()">✕</span></div>
+ <ul class="panel-list"><li>MASIH TAHAP UPDATE</li></ul>
+</div>
+
+<!-- ADMIN -->
+<div class="panel hidden" id="adminPanel">
+ <div class="panel-header"><h2>LIST ADMIN</h2><span onclick="closePanel()">✕</span></div>
+ <ul class="panel-list"><li>DREXX</li><li>RUZZ</li><li>HANZ</li><li>NOPAL</li></ul>
+</div>
+
+<!-- GALERI -->
+<div class="panel hidden" id="galleryPanel">
+ <div class="panel-header"><h2>GALERI</h2><span onclick="closePanel()">✕</span></div>
+ <div class="gallery">
+  <img src="foto1.jpg">
+  <img src="foto2.jpg">
+  <img src="foto3.jpg">
+ </div>
+</div>
+
+<!-- DDS -->
+<div class="panel hidden" id="ddsPanel">
+ <div class="panel-header"><h2>DDS</h2><span onclick="closePanel()">✕</span></div>
+ <div class="gallery">
+  <img src="dds1.jpg">
+  <img src="dds2.jpg">
+  <img src="dds3.jpg">
+ </div>
+</div>
+
+<!-- KODAM -->
+<div class="panel hidden" id="kodamPanel">
+ <div class="panel-header"><h2>CEK KODAM</h2><span onclick="closePanel()">✕</span></div>
+ <div class="panel-body">
+  <input id="namaKodam" class="input" placeholder="Masukkan nama">
+  <button class="register-btn" onclick="cekKodam()">CEK</button>
+  <p id="hasilKodam"></p>
+ </div>
+</div>
+
+<!-- FISH -->
+<div class="modal" id="fishModal">
+ <div class="modal-box">
+  <span class="close" onclick="closeFish()">✕</span>
+  <img src="fishit.jpg">
+ </div>
+</div>
+
+<!-- IMAGE VIEWER -->
+<div class="modal" id="imgViewer">
+ <div class="modal-box">
+  <span class="close" onclick="closeImg()">✕</span>
+  <img id="viewerImg">
+ </div>
+</div>
+
+<audio id="bgMusic" loop><source src="music.mp3"></audio>
+<button class="music-btn" id="musicBtn">🔊 MUSIC</button>
+
+<script>
+const splash=document.getElementById("splash"),
+main=document.getElementById("main"),
+tapText=document.getElementById("tapText"),
+progress=document.getElementById("loadingProgress"),
+music=document.getElementById("bgMusic"),
+musicBtn=document.getElementById("musicBtn"),
+menu=document.getElementById("menu");
+
+let load=0,playing=false;
+
+const kodams=["pipa palaron","tai sapi","tai monyet","kipas angin","ikan pesut","sapi sakti","monyet","ayam","begal"];
+
+setInterval(()=>{
+ if(load<100){
+  load++;progress.style.width=load+"%";
+  if(load===100)tapText.classList.remove("hidden");
+ }
+},40);
+
+splash.onclick=()=>{
+ if(load<100)return;
+ splash.classList.add("fade-out");
+ main.classList.remove("hidden");
+ music.volume=0;music.play();
+ let v=0;const f=setInterval(()=>{if(v<1){v+=.05;music.volume=v}else clearInterval(f)},200);
+ playing=true;musicBtn.textContent="⏸ MUSIC";
+};
+
+musicBtn.onclick=()=>{
+ playing?music.pause():music.play();
+ playing=!playing;
+ musicBtn.textContent=playing?"⏸ MUSIC":"🔊 MUSIC";
+};
+
+function toggleMenu(){menu.classList.toggle("hidden")}
+function openPanel(id){
+ menu.classList.add("hidden");
+ const p=document.getElementById(id);
+ p.classList.remove("hidden");
+ setTimeout(()=>p.classList.add("show"),10);
+}
+function closePanel(){
+ document.querySelectorAll(".panel").forEach(p=>{
+  p.classList.remove("show");
+  setTimeout(()=>p.classList.add("hidden"),300);
+ });
+}
+function cekKodam(){
+ const n=document.getElementById("namaKodam").value;
+ if(!n)return;
+ document.getElementById("hasilKodam").innerText=n+" memiliki kodam: "+kodams[Math.floor(Math.random()*kodams.length)];
+}
+function openFish(){menu.classList.add("hidden");document.getElementById("fishModal").classList.add("show")}
+function closeFish(){document.getElementById("fishModal").classList.remove("show")}
+
+document.querySelectorAll(".gallery img").forEach(i=>{
+ i.onclick=()=>{
+  document.getElementById("viewerImg").src=i.src;
+  document.getElementById("imgViewer").classList.add("show");
+ }
+});
+function closeImg(){document.getElementById("imgViewer").classList.remove("show")}
+</script>
+
+</body>
+</html>
